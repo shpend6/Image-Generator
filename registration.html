@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Registration Form</title>
+</head>
+
+<body>
+    <header></header>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card bg-success">
+                    <div class="card-body">
+                        <h2 class="card-title text-center text-white mb-4">Registration</h2>
+                        <form id="registration">
+                            <div class="form-group">
+                                <label for="username" class="text-white">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Choose a username">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="text-white">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="text-white">Password</label>
+                                <input type="password" class="form-control" id="password"
+                                    placeholder="Create a password">
+                            </div>
+                            <button type="submit" class="btn btn-light btn-block">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+    <!-- Add Bootstrap JS and jQuery if needed -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="module">
+        import { Footer } from "./components/Footer.js"
+        import { Header } from "./components/Header.js"
+        Footer(document.querySelector('footer'))
+        Header(document.querySelector('header'))
+
+
+        const user_is_loggedin = localStorage.getItem('loggedin_user')
+
+        if (user_is_loggedin != null) {
+            window.location.href = 'http://127.0.0.1:5500/index.html'
+        }
+
+        // register
+        document.querySelector('#registration').addEventListener('submit', e => {
+            e.preventDefault()
+            const users = (localStorage.getItem('users') == null) ? [] : JSON.parse(localStorage.getItem('users'))
+            let errors = []
+
+            const user = {
+                username: e.target.elements[0].value,
+                email: e.target.elements[1].value,
+                password: e.target.elements[2].value
+            }
+
+            if (users.length > 0) {
+                const email_is_available = users.filter(u => u.email == user.email)
+
+                if (email_is_available.length > 0) {
+                    errors.push('This email is already in use! Please choose different email address.')
+                } else {
+                    localStorage.setItem('users', JSON.stringify([...users, user]))
+                }
+            } else {
+                localStorage.setItem('users', JSON.stringify([user]))
+            }
+
+            if (errors.length) {
+                alert(errors[0])
+            } else {
+                alert('User was registered successfully.')
+                const login_prompt = confirm('Do you want to login?')
+
+                if (login_prompt) window.location.href = 'http://127.0.0.1:5500/login.html'
+            }
+        })
+    </script>
+</body>
+
+</html>

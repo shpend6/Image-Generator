@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Login Form</title>
+</head>
+
+<body>
+    <header></header>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <h2 class="card-title text-center text-white mb-4">Login</h2>
+                        <form id="login">
+                            <div class="form-group">
+                                <label for="username" class="text-white">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="text-white">Password</label>
+                                <input type="password" class="form-control" id="password"
+                                    placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="btn btn-light btn-block">Log In</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+
+    <!-- Add Bootstrap JS and jQuery if needed -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="module">
+        import { Footer } from "./components/Footer.js"
+        import { Header } from "./components/Header.js"
+        Footer(document.querySelector('footer'))
+        Header(document.querySelector('header'))
+
+        const user_is_loggedin = localStorage.getItem('loggedin_user')
+
+        if (user_is_loggedin != null) {
+            window.location.href = 'http://127.0.0.1:5500/index.html'
+        }
+
+        // login
+        document.querySelector('#login').addEventListener('submit', e => {
+            e.preventDefault()
+            const users = (localStorage.getItem('users') == null) ? [] : JSON.parse(localStorage.getItem('users'))
+            let errors = []
+
+            const user = {
+                username: e.target.elements[0].value,
+                password: e.target.elements[1].value
+            }
+
+            if (users.length > 0) {
+                let user_loggedin = false
+                for (let u of users) {
+                    if (u.username == user.username && u.password == user.password) {
+                        user_loggedin = true
+                        break
+                    }
+                }
+
+                if (user_loggedin) {
+                    localStorage.setItem('loggedin_user', user.username)
+                    window.location.href = 'http://127.0.0.1:5500/index.html'
+                    console.log("smth")
+                } else {
+                    alert('Credentials are incorrect!')
+                }
+            } else {
+                alert('User is not registered!')
+            }
+        })
+    </script>
+</body>
+
+</html>

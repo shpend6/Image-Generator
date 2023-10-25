@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Generator</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <header></header>
+    <div class="container text-center">
+        <h1 class="mt-5">Dog Generator</h1>
+        <div class="form-group mt-4">
+            <label for="breedSelect" class="mr-2">Select a Breed:</label>
+            <select id="breedSelect" class="form-control d-inline-block" style="width: 200px;">
+                <option value="">Random</option>
+            </select>
+        </div>
+        <button id="generateDog" class="btn btn-primary mt-3">Generate Dog</button>
+        <div class="mt-4" style="display: flex; flex-direction: column; align-items: center;">
+            <img id="dogImage" class="img-fluid" alt="Dog Image" style="width: 350px;">
+            <button id="addToFavorites" class="btn btn-danger mt-2">Add to Favorites</button>
+        </div>
+    </div>
+    <footer></footer>
+    <!-- Add Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script type="module">
+        import { Footer } from "./components/Footer.js"
+        import { Header } from "./components/Header.js"
+        Footer(document.querySelector('footer'))
+        Header(document.querySelector('header'))
+        document.addEventListener("DOMContentLoaded", function () {
+            const generateDogButton = document.getElementById("generateDog");
+            const breedSelect = document.getElementById("breedSelect");
+            const dogImage = document.getElementById("dogImage");
+
+            // Function to fetch and populate dog breeds
+            function populateDogBreeds() {
+                fetch("https://api.thedogapi.com/v1/breeds")
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(breed => {
+                            const option = document.createElement("option");
+                            option.value = breed.id;
+                            option.textContent = breed.name;
+                            breedSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error(error));
+            }
+
+            // Populate the breed list on page load
+            populateDogBreeds();
+            function generateDog() {
+                const breed = breedSelect.value;
+                const url = breed
+                    ? `https://api.thedogapi.com/v1/images/search?breed_ids=${breed}`
+                    : 'https://api.thedogapi.com/v1/images/search';
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            const imageUrl = data[0].url;
+                            dogImage.src = imageUrl;
+                        }
+                    })
+                    .catch(error => console.error(error));
+            }
+            generateDog()
+            generateDogButton.addEventListener("click", function () {
+                generateDog();
+            });
+        });
+        function addToFavorites() {
+            const currentImage = dogImage.src;
+            let favorites = JSON.parse(localStorage.getItem('dogFavorites')) || [];
+
+            // Check if the image is already in favorites
+            if (!favorites.includes(currentImage)) {
+                favorites.push(currentImage);
+                localStorage.setItem('dogFavorites', JSON.stringify(favorites));
+                alert('Image added to favorites!');
+            } else {
+                alert('Image is already in favorites.');
+            }
+        }
+
+        const addToFavoritesButton = document.getElementById("addToFavorites");
+
+        addToFavoritesButton.addEventListener("click", addToFavorites);
+    </script>
+</body>
+
+</html>

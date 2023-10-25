@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Generator</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <header></header>
+    <div class="container text-center">
+        <h1 class="mt-5">Cat Generator</h1>
+        <div class="form-group mt-4">
+            <label for="breedSelect" class="mr-2">Select a Breed:</label>
+            <select id="breedSelect" class="form-control d-inline-block" style="width: 200px;">
+                <option value="">Random</option>
+            </select>
+        </div>
+        <button id="generateCat" class="btn btn-primary mt-3">Generate Cat</button>
+        <div class="mt-4" style="display: flex; flex-direction: column; align-items: center;">
+            <img id="catImage" class="img-fluid" alt="Cat Image" style="height: 300px;" src="assets/img/reji.jpg">
+            <button id="addToFavorites" class="btn btn-danger mt-2">Add to Favorites</button>
+        </div>
+        <p style="width: 350px; margin: 1rem auto;" id="breed-description">
+        </p>
+    </div>
+    <footer></footer>
+    <!-- Add Bootstrap JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="module">
+        import { Footer } from "./components/Footer.js"
+        import { Header } from "./components/Header.js"
+        Footer(document.querySelector('footer'))
+        Header(document.querySelector('header'))
+        const generateCatButton = document.getElementById("generateCat");
+        const breedSelect = document.getElementById("breedSelect");
+        const catImage = document.getElementById("catImage");
+        const catDescription = document.getElementById("breed-description")
+
+        // Function to fetch and populate cat breeds
+        function populateCatBreeds() {
+            fetch("https://api.thecatapi.com/v1/breeds")
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(breed => {
+                        const option = document.createElement("option");
+                        option.value = breed.id;
+                        option.textContent = breed.name;
+                        breedSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error(error));
+        }
+
+        // Populate the breed list on page load
+        populateCatBreeds();
+
+        generateCatButton.addEventListener("click", function () {
+            const breed = breedSelect.value;
+            const url = breed
+                ? `https://api.thecatapi.com/v1/images/search?breed_ids=${breed}`
+                : 'https://api.thecatapi.com/v1/images/search';
+            if (breed) {
+                const url2 = `https://api.thecatapi.com/v1/breeds/${breed}`;
+                fetch(url2)
+                    .then(response => response.json())
+                    .then(data => {
+                        const description = data.description; // Access the description property from the first breed object
+                        catDescription.textContent = description
+
+                    })
+                    .catch(error => console.error(error));
+            }
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const imageUrl = data[0].url;
+
+                        catImage.src = imageUrl;
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+
+        function addToFavorites() {
+            const currentImage = catImage.src;
+            let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+            // Check if the image is already in favorites
+            if (!favorites.includes(currentImage)) {
+                favorites.push(currentImage);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                alert('Cat image added to favorites!');
+            } else {
+                alert('Cat image is already in favorites.');
+            }
+        }
+
+        const addToFavoritesButton = document.getElementById("addToFavorites");
+
+        addToFavoritesButton.addEventListener("click", addToFavorites);
+    </script>
+</body>
+
+</html>
