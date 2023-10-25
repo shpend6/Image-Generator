@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorites</title>
-    <!-- Add Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .favorites-container {
@@ -29,15 +28,11 @@
 
         .delete-button {
             background-color: #FF5733;
-            /* Background color for the button */
             color: #fff;
-            /* Text color */
             border: none;
             padding: 5px 10px;
-            /* Add padding to the button */
             cursor: pointer;
             margin-top: 5px;
-            /* Add some spacing between the button and image */
         }
     </style>
 </head>
@@ -47,7 +42,6 @@
     <div class="container text-center">
         <h1 class="mt-5">Favorites</h1>
 
-        <!-- Cat Favorites Section -->
         <div class="favorites-section">
             <h2>Cats</h2>
             <div class="favorites-container" id="cat-favorites-container">
@@ -55,7 +49,6 @@
             <p id="no-cat-favorites-message">No cat favorites found.</p>
         </div>
 
-        <!-- Dog Favorites Section -->
         <div class="favorites-section">
             <h2>Dogs</h2>
             <div class="favorites-container" id="dog-favorites-container">
@@ -64,7 +57,6 @@
         </div>
     </div>
     <footer></footer>
-    <!-- Add Bootstrap JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -75,7 +67,6 @@
         Footer(document.querySelector('footer'))
         Header(document.querySelector('header'))
 
-        // Function to display cat favorites
         function displayCatFavorites() {
             const catFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
@@ -88,7 +79,7 @@
             } else {
                 noCatFavoritesMessage.style.display = "none";
                 catFavoritesContainer.style.display = "grid";
-                catFavoritesContainer.innerHTML = ""; // Clear any previous content
+                catFavoritesContainer.innerHTML = "";
 
                 for (const imageUrl of catFavorites) {
                     const container = document.createElement("div");
@@ -98,19 +89,19 @@
                     image.classList.add("favorite-image");
                     image.src = imageUrl;
 
-                    // Create an anchor element around the image
+                   
                     const imageLink = document.createElement("a");
                     imageLink.href = imageUrl;
-                    imageLink.target = "_blank"; // Open the link in a new tab
+                    imageLink.target = "_blank"; 
                     imageLink.appendChild(image);
 
-                    // Create a delete button
+                
                     const deleteButton = document.createElement("button");
                     deleteButton.textContent = "Delete";
                     deleteButton.classList.add("delete-button");
                     deleteButton.addEventListener("click", function () {
                         removeFavorite(imageUrl, "favorites");
-                        displayCatFavorites(); // Refresh the list after deletion
+                        displayCatFavorites(); 
                     });
 
                     container.appendChild(imageLink);
@@ -121,7 +112,6 @@
             }
         }
 
-        // Function to display dog favorites
         function displayDogFavorites() {
             const dogFavorites = JSON.parse(localStorage.getItem('dogFavorites')) || [];
 
@@ -134,7 +124,7 @@
             } else {
                 noDogFavoritesMessage.style.display = "none";
                 dogFavoritesContainer.style.display = "grid";
-                dogFavoritesContainer.innerHTML = ""; // Clear any previous content
+                dogFavoritesContainer.innerHTML = ""; 
 
                 for (const imageUrl of dogFavorites) {
                     const container = document.createElement("div");
@@ -144,19 +134,18 @@
                     image.classList.add("favorite-image");
                     image.src = imageUrl;
 
-                    // Create an anchor element around the image
                     const imageLink = document.createElement("a");
                     imageLink.href = imageUrl;
-                    imageLink.target = "_blank"; // Open the link in a new tab
+                    imageLink.target = "_blank"; 
                     imageLink.appendChild(image);
 
-                    // Create a delete button
+
                     const deleteButton = document.createElement("button");
                     deleteButton.textContent = "Delete";
                     deleteButton.classList.add("delete-button");
                     deleteButton.addEventListener("click", function () {
                         removeFavorite(imageUrl, "dogFavorites");
-                        displayDogFavorites(); // Refresh the list after deletion
+                        displayDogFavorites(); 
                     });
 
                     container.appendChild(imageLink);
@@ -167,7 +156,6 @@
             }
         }
 
-        // Function to remove a favorite from local storage
         function removeFavorite(imageUrl, storageKey) {
             const favorites = JSON.parse(localStorage.getItem(storageKey)) || [];
 
@@ -176,7 +164,7 @@
             localStorage.setItem(storageKey, JSON.stringify(updatedFavorites));
         }
 
-        // Call the functions to display cat and dog favorites when the page loads
+   
         displayCatFavorites();
         displayDogFavorites();
     </script>
