@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cat Generator</title>
-    <!-- Add Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
@@ -28,7 +27,6 @@
         </p>
     </div>
     <footer></footer>
-    <!-- Add Bootstrap JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -42,7 +40,7 @@
         const catImage = document.getElementById("catImage");
         const catDescription = document.getElementById("breed-description")
 
-        // Function to fetch and populate cat breeds
+
         function populateCatBreeds() {
             fetch("https://api.thecatapi.com/v1/breeds")
                 .then(response => response.json())
@@ -57,7 +55,7 @@
                 .catch(error => console.error(error));
         }
 
-        // Populate the breed list on page load
+   
         populateCatBreeds();
 
         generateCatButton.addEventListener("click", function () {
@@ -70,7 +68,7 @@
                 fetch(url2)
                     .then(response => response.json())
                     .then(data => {
-                        const description = data.description; // Access the description property from the first breed object
+                        const description = data.description;
                         catDescription.textContent = description
 
                     })
@@ -92,7 +90,6 @@
             const currentImage = catImage.src;
             let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-            // Check if the image is already in favorites
             if (!favorites.includes(currentImage)) {
                 favorites.push(currentImage);
                 localStorage.setItem('favorites', JSON.stringify(favorites));
