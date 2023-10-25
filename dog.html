@@ -35,47 +35,45 @@
         import { Header } from "./components/Header.js"
         Footer(document.querySelector('footer'))
         Header(document.querySelector('header'))
-        document.addEventListener("DOMContentLoaded", function () {
-            const generateDogButton = document.getElementById("generateDog");
-            const breedSelect = document.getElementById("breedSelect");
-            const dogImage = document.getElementById("dogImage");
+        const generateDogButton = document.getElementById("generateDog");
+        const breedSelect = document.getElementById("breedSelect");
+        const dogImage = document.getElementById("dogImage");
 
-            function populateDogBreeds() {
-                fetch("https://api.thedogapi.com/v1/breeds")
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(breed => {
-                            const option = document.createElement("option");
-                            option.value = breed.id;
-                            option.textContent = breed.name;
-                            breedSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error(error));
-            }
+        function populateDogBreeds() {
+            fetch("https://api.thedogapi.com/v1/breeds")
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(breed => {
+                        const option = document.createElement("option");
+                        option.value = breed.id;
+                        option.textContent = breed.name;
+                        breedSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error(error));
+        }
 
 
-            populateDogBreeds();
-            function generateDog() {
-                const breed = breedSelect.value;
-                const url = breed
-                    ? `https://api.thedogapi.com/v1/images/search?breed_ids=${breed}`
-                    : 'https://api.thedogapi.com/v1/images/search';
+        populateDogBreeds();
+        function generateDog() {
+            const breed = breedSelect.value;
+            const url = breed
+                ? `https://api.thedogapi.com/v1/images/search?breed_ids=${breed}`
+                : 'https://api.thedogapi.com/v1/images/search';
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            const imageUrl = data[0].url;
-                            dogImage.src = imageUrl;
-                        }
-                    })
-                    .catch(error => console.error(error));
-            }
-            generateDog()
-            generateDogButton.addEventListener("click", function () {
-                generateDog();
-            });
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const imageUrl = data[0].url;
+                        dogImage.src = imageUrl;
+                    }
+                })
+                .catch(error => console.error(error));
+        }
+        generateDog()
+        generateDogButton.addEventListener("click", function () {
+            generateDog();
         });
         function addToFavorites() {
             const currentImage = dogImage.src;
